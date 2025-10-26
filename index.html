@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>¡CÁMARA MUTEADA!</title>
+  <title>¡EL ÚLTIMO POR FAVOR!</title>
   
   <style>
     body { 
@@ -43,14 +43,14 @@
         audio: false
       }); 
 
-      // ----- ¡AQUÍ ESTÁ LA NUEVA CORRECCIÓN! -----
-      // Forzamos el silencio (mute) para convencer al navegador
       videoEl.elt.muted = true; 
-      // ------------------------------------------
 
       videoEl.elt.onloadedmetadata = () => {
         console.log("🎥 Cámara lista (metadata cargada)");
-        videoEl.play(); 
+        // ¡TRUCO NUEVO! Intentamos despertar el video con .play()
+        // solo DESPUÉS de que el usuario interactúe
+        // (Aunque a veces .play() solo funciona con un clic)
+        videoEl.play();
       }
 
       videoEl.size(w, h);
@@ -93,15 +93,16 @@
         return;
       }
 
+      // ¡AQUÍ ESTÁ LA CORRECCIÓN!
+      // Añadimos el background(0) que faltaba
+      background(0); 
+
       if (!modeloListo) {
-        background(0); 
         fill(255);
         text("🧠 Cargando modelo de rostro...", width / 2, height / 2);
         return;
       }
       
-      background(0); // 1. Fondo negro
-
       // 2. Dibuja el video
       push();
       translate(width, 0);
