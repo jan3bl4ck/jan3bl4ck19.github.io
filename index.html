@@ -41,7 +41,12 @@
       }
 
       videoEl.size(w, h);
-      videoEl.hide();
+      
+      // ----- ¡AQUÍ ESTÁ LA CORRECCIÓN! -----
+      // .hide() no funcionaba, así que lo ocultamos
+      // directamente con JavaScript.
+      videoEl.elt.style.display = 'none'; 
+      // ------------------------------------
 
       const options = {
         withLandmarks: true,
@@ -49,8 +54,7 @@
         withDescriptors: false
       };
 
-      // Esta línea AHORA SÍ va a funcionar
-      faceapi = ml5.faceApi(videoEl.elt, options, modelReady); // <-- 'A' mayúscula
+      faceapi = ml5.faceApi(videoEl.elt, options, modelReady);
 
       textAlign(CENTER);
       textSize(20);
