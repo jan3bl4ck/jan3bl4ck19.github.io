@@ -36,17 +36,17 @@
         audio: false
       });
 
+      // ----- ¡AQUÍ ESTÁ LA CORRECCIÓN! -----
+      // Esperamos a que la cámara esté lista (metadata cargada)
+      // y ENTONCES la ocultamos.
       videoEl.elt.onloadedmetadata = () => {
         console.log("🎥 Cámara lista (metadata cargada)");
+        videoEl.elt.style.display = 'none'; // <--- LA MOVIMOS AQUÍ
       }
+      // ------------------------------------
 
       videoEl.size(w, h);
-      
-      // ----- ¡AQUÍ ESTÁ LA CORRECCIÓN! -----
-      // .hide() no funcionaba, así que lo ocultamos
-      // directamente con JavaScript.
-      videoEl.elt.style.display = 'none'; 
-      // ------------------------------------
+      // <--- LA BORRAMOS DE AQUÍ
 
       const options = {
         withLandmarks: true,
