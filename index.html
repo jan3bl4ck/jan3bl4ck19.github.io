@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>¡DESPIERTA CÁMARA!</title>
+  <title>¡CÁMARA MUTEADA!</title>
   
   <style>
     body { 
@@ -12,14 +12,10 @@
       overflow: hidden; 
       background: #000; 
     }
-    
-    /* Manda el <video> original al fondo */
     video {
       z-index: -1;
       display: none !important;
     }
-    
-    /* Trae el <canvas> de p5.js al frente */
     canvas {
       z-index: 100;
     }
@@ -40,19 +36,21 @@
     function setup() {
       const w = windowWidth < 700 ? windowWidth : 640;
       const h = windowHeight < 500 ? windowHeight : 480;
-      createCanvas(w, h); // p5.js crea un <canvas>
+      createCanvas(w, h); 
 
       videoEl = createCapture({
         video: { facingMode: "user", width: w, height: h },
         audio: false
-      }); // p5.js crea un <video>
+      }); 
+
+      // ----- ¡AQUÍ ESTÁ LA NUEVA CORRECCIÓN! -----
+      // Forzamos el silencio (mute) para convencer al navegador
+      videoEl.elt.muted = true; 
+      // ------------------------------------------
 
       videoEl.elt.onloadedmetadata = () => {
         console.log("🎥 Cámara lista (metadata cargada)");
-        // ----- ¡AQUÍ ESTÁ LA NUEVA CORRECCIÓN! -----
-        // "Despertamos" la cámara para que envíe video
         videoEl.play(); 
-        // ------------------------------------------
       }
 
       videoEl.size(w, h);
@@ -87,25 +85,24 @@
     }
 
     function draw() {
-      // Esta comprobación es más robusta
+      // Usamos esta comprobación, es la más segura
       if (videoEl.elt.videoWidth === 0) {
-        background(0); // Mantenemos el fondo negro
+        background(0); 
         fill(255);
         text("🎥 Iniciando cámara...", width / 2, height / 2);
         return;
       }
 
       if (!modeloListo) {
-        background(0); // Mantenemos el fondo negro
+        background(0); 
         fill(255);
         text("🧠 Cargando modelo de rostro...", width / 2, height / 2);
         return;
       }
       
-      // ¡Aquí es donde la magia pasa!
       background(0); // 1. Fondo negro
 
-      // 2. Dibuja el video (que ya no será gris)
+      // 2. Dibuja el video
       push();
       translate(width, 0);
       scale(-1, 1);
