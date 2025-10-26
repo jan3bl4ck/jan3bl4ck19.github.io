@@ -2,9 +2,9 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale-1.0">
   
-  <title>Retrato de Huella Digital</title>
+  <title>¡CARGANDO EN ORDEN!</title>
   
   <style>
     body { 
@@ -13,12 +13,10 @@
       background: #000; 
     }
     video {
-      /* Oculta el <video> original a la fuerza */
       position: absolute;
       left: -9999px;
     }
     canvas {
-      /* Trae el <canvas> de p5.js al frente */
       z-index: 100;
     }
   </style>
@@ -26,7 +24,6 @@
 
 <body>
   <script src="https://unpkg.com/ml5@0.12.2/dist/ml5.min.js"></script>
-  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
 
   <script>
@@ -38,12 +35,12 @@
     
     // --- Variables de Huella Digital (IP) ---
     let ip = "0.0.0.0";
-    let valores;
+    let valores; // ¡YA NO ESTÁ EN SETUP!
     let index = 0;
 
     function setup() {
       createCanvas(800, 800);
-      frameRate(10); // 🎵 Un ritmo vivo
+      frameRate(10);
       
       // --- Configurar Cámara y FaceAPI ---
       videoEl = createCapture({
@@ -56,7 +53,6 @@
         videoEl.play(); 
       }
       videoEl.size(width, height);
-      // El CSS oculta el <video>
 
       const options = {
         withLandmarks: true,
@@ -65,7 +61,22 @@
       };
       faceapi = ml5.faceApi(videoEl.elt, options, modelReady);
 
-      // --- Configurar Huella Digital (IP) ---
+      // --- ¡YA NO BUSCAMOS LA IP AQUÍ! ---
+      
+      // --- Configuración General ---
+      textAlign(CENTER);
+      textSize(20);
+      fill(255);
+    }
+
+    // --- Funciones de Detección Facial ---
+    function modelReady() {
+      console.log("✅ Modelo de rostro cargado.");
+      modeloListo = true;
+      
+      // ----- ¡AQUÍ ESTÁ LA CORRECCIÓN! -----
+      // Ahora que el modelo cargó, BUSCAMOS LA IP.
+      console.log("🔢 Buscando huella IP...");
       fetch("https://api64.ipify.org?format=json")
         .then(res => res.json())
         .then(data => {
@@ -77,17 +88,8 @@
           console.error("Error al obtener IP:", err);
           valores = [1, 2, 3, 4]; // Valores por defecto si falla
         });
-      
-      // --- Configuración General ---
-      textAlign(CENTER);
-      textSize(20);
-      fill(255);
-    }
+      // ------------------------------------
 
-    // --- Funciones de Detección Facial ---
-    function modelReady() {
-      console.log("✅ Modelo cargado correctamente");
-      modeloListo = true;
       faceapi.detect(videoEl.elt, gotResults);
     }
 
@@ -102,12 +104,12 @@
     
     // --- Función DRAW principal ---
     function draw() {
-      // 1. Fondo con memoria (de tu proyecto IP)
+      // 1. Fondo con memoria
       noStroke();
       fill(10, 10, 20, 30);
       rect(0, 0, width, height);
 
-      // --- Comprobaciones de Carga ---
+      // --- Comprobaciones de Carga (ahora en orden) ---
       if (videoEl.elt.videoWidth === 0) {
         fill(255);
         text("🎥 Iniciando cámara...", width / 2, height / 2);
@@ -118,6 +120,7 @@
         text("🧠 Cargando modelo de rostro...", width / 2, height / 2);
         return;
       }
+      // Esta es la nueva espera
       if (!valores) {
         fill(255);
         text("🔢 Cargando huella IP...", width / 2, height / 2);
@@ -126,15 +129,10 @@
 
       // --- ¡LA MAGIA OCURRE AQUÍ! ---
       
-      // 3. Comprobar si hay una cara
       if (detections.length > 0) {
-        // ¡Sí hay cara! Obtenemos los 68 puntos
         const points = detections[0].landmarks.positions;
-        
-        // 4. Decidir qué estilo dibujar (según tu IP)
         let num = valores[index % valores.length] % 10;
         
-        // 5. Llamar a la función de estilo, PASÁNDOLE los puntos de la cara
         switch(num){
           case 0: estilo0(points); break;
           case 1: estilo1(points); break;
@@ -148,10 +146,9 @@
           case 9: estilo9(points); break;
         }
         
-        index++; // Avanzamos al siguiente número de la IP
+        index++; 
 
       } else {
-        // No hay cara, mostrar mensaje
         fill(255);
         text("Mira hacia la cámara 👀", width / 2, height / 2);
       }
@@ -168,16 +165,14 @@
     }
 
     // ---------------------------------------------------------------
-    // --- ESTILOS ADAPTADOS AL ROSTRO (TU CÓDIGO MODIFICADO) ---
+    // --- ESTILOS ADAPTADOS AL ROSTRO (Sin cambios) ---
     // ---------------------------------------------------------------
-    // Ahora, cada función acepta 'points' (los 68 puntos de la cara)
 
     function estilo0(points) {
       let colores = ['#64B5F680','#90CAF980','#4FC3F780','#29B6F680','#0288D180'];
-      for (let i=0; i < 2; i++){ // Reducido para que no se sature
-        let p = random(points); // Tomamos un punto ALEATORIO de la cara
+      for (let i=0; i < 2; i++){
+        let p = random(points); 
         fill(random(colores));
-        // Dibujamos en la posición del punto (reflejado)
         ellipse(width - p.x, p.y, random(20, 120));
       }
     }
@@ -188,7 +183,7 @@
         let p = random(points);
         fill(random(colores));
         push();
-        translate(width - p.x, p.y); // Nos movemos al punto de la cara (reflejado)
+        translate(width - p.x, p.y); 
         rotate(random(TWO_PI));
         rect(0,0,random(20,100),random(10,50),10);
         pop();
@@ -200,8 +195,8 @@
       for (let i=0; i < 2; i++){
         let p = random(points);
         fill(random(colores));
-        let x = width - p.x; // <-- Posición X reflejada
-        let y = p.y;         // <-- Posición Y
+        let x = width - p.x; 
+        let y = p.y;         
         beginShape();
         for(let j=0;j<5;j++){
           let angle = TWO_PI/5*j + frameCount*0.01;
@@ -220,83 +215,70 @@
       }
     }
 
-    function estilo4(points) {
-      let colores = ['#A5D6A780','#81C78480','#66BB6A80','#4CAF5080'];
-      for(let i=0; i < 2; i++){
-        let p = random(points);
-        fill(random(colores));
-        push();
-        translate(width - p.x, p.y);
-        rotate(frameCount*0.02);
-        rect(0,0,random(40,80),random(20,60));
-        pop();
-      }
-    }
+function estilo4(points) {
+  let colores = ['#A5D6A780','#81C78480','#66BB6A80','#4CAF5080'];
+  for(let i=0; i < 2; i++){
+    let p = random(points);
+    fill(random(colores));
+    push();
+    translate(width - p.x, p.y);
+    rotate(frameCount*0.02);
+    rect(0,0,random(40,80),random(20,60));
+    pop();
+  }
+}
 
-    function estilo5(points) {
-      let colores = ['#80DEEA80','#26C6DA80','#00ACC180','#00838F80'];
-      for(let i=0; i < 2; i++){
-        let p = random(points);
-        fill(random(colores));
-        let x = width - p.x;
-        let y = p.y;
-        triangle(x,y,x+random(30,70),y+random(-30,30),x+random(-40,40),y+random(30,70));
-      }
-    }
+function estilo5(points) {
+  let colores = ['#80DEEA80','#26C6DA80','#00ACC180','#00838F80'];
+  for(let i=0; i < 2; i++){
+    let p = random(points);
+    fill(random(colores));
+    let x = width - p.x;
+    let y = p.y;
+    triangle(x,y,x+random(30,70),y+random(-30,30),x+random(-40,40),y+random(30,70));
+  }
+}
 
-    function estilo6(points) {
-      let colores = ['#F5F5F580','#BDBDBD80','#9E9E9E80','#75757580'];
-      for(let i=0; i < 3; i++){ // Un poco más de rectángulos
-        let p = random(points);
-        fill(random(colores));
-        rect(width - p.x, p.y, random(10,60), random(10,60));
-      }
-    }
+function estilo6(points) {
+  let colores = ['#F5F5F580','#BDBDBD80','#9E9E9E80','#75757580'];
+  for(let i=0; i < 3; i++){ 
+    let p = random(points);
+    fill(random(colores));
+    rect(width - p.x, p.y, random(10,60), random(10,60));
+  }
+}
 
-    function estilo7(points) {
-      let colores = ['#FFB6C180','#F48FB180','#F0629280','#EC407A80'];
-      for(let i=0; i < 2; i++){
-        let p = random(points);
-        fill(random(colores));
-        let x = width - p.x;
-        let y = p.y;
-        beginShape();
-        for(let j=0;j<6;j++){
-          let angle=TWO_PI/6*j;
-          vertex(x+cos(angle)*random(20,50), y+sin(angle)*random(20,50));
-        }
-        endShape(CLOSE);
-      }
+function estilo7(points) {
+  let colores = ['#FFB6C180','#F48FB180','#F0629280','#EC407A80'];
+  for(let i=0; i < 2; i++){
+    let p = random(points);
+    fill(random(colores));
+    let x = width - p.x;
+    let y = p.y;
+    beginShape();
+    for(let j=0;j<6;j++){
+      let angle=TWO_PI/6*j;
+      vertex(x+cos(angle)*random(20,50), y+sin(angle)*random(20,50));
     }
+    endShape(CLOSE);
+  }
+}
 
-    function estilo8(points) {
-      let colores = ['#FFF9C480','#FFF59D80','#FFEE5880','#FFF17680'];
-      let c1=color(random(colores));
-      let c2=color(random(colores));
-      for(let j=0; j < 2; j++){
-        let p = random(points);
-        fill(lerpColor(c1,c2,j/10));
-        ellipse(width - p.x, p.y, random(30,100));
-      }
-    }
+function estilo8(points) {
+  let colores = ['#FFF9C480','#FFF59D80','#FFEE5880','#FFF17680'];
+  let c1=color(random(colores));
+  let c2=color(random(colores));
+  for(let j=0; j < 2; j++){
+    let p = random(points);
+    fill(lerpColor(c1,c2,j/10));
+    ellipse(width - p.x, p.y, random(30,100));
+  }
+}
 
-    function estilo9(points) {
-      let colores = ['#BBDEFB80','#64B5F680','#2196F380','#1976D280'];
-      for(let i=0; i < 2; i++){
-        let p = random(points);
-        fill(random(colores));
-        push();
-        translate(width - p.x, p.y);
-        rotate(random(TWO_PI));
-        beginShape();
-        for(let j=0;j<random(5,8);j++){
-          vertex(cos(j*TWO_PI/6)*random(20,60), sin(j*TWO_PI/6)*random(20,60));
-        }
-        endShape(CLOSE);
-        pop();
-      }
-    }
-
-  </script>
-</body>
-</html>
+function estilo9(points) {
+  let colores = ['#BBDEFB80','#64B5F680','#2196F380','#1976D280'];
+  for(let i=0; i < 2; i++){
+    let p = random(points);
+    fill(random(colores));
+    push();
+    translate
