@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>¡CSS AL RESCATE!</title>
+  <title>¡VERSIÓN DEFINITIVA!</title>
   
   <style>
     body { 
@@ -13,12 +13,13 @@
       background: #000; 
     }
     
-    /* ----- ¡AQUÍ ESTÁ LA NUEVA CORRECCIÓN! ----- */
-    /* Oculta el elemento <video> original a la fuerza */
+    /* ----- ¡AQUÍ ESTÁ EL NUEVO TRUCO! ----- */
+    /* Lo movemos 9999px fuera de la pantalla */
     video {
-      display: none;
+      position: absolute;
+      left: -9999px; 
     }
-    /* ----------------------------------------- */
+    /* ------------------------------------ */
 
   </style>
 </head>
@@ -44,14 +45,12 @@
         audio: false
       });
 
-      // Ya no necesitamos la corrección de JavaScript
-      // porque el CSS se encarga de ocultarlo.
       videoEl.elt.onloadedmetadata = () => {
         console.log("🎥 Cámara lista (metadata cargada)");
       }
 
       videoEl.size(w, h);
-      // No necesitamos .hide() ni .style.display, el CSS lo hace.
+      // No necesitamos .hide() ni .style, el CSS lo hace.
 
       const options = {
         withLandmarks: true,
