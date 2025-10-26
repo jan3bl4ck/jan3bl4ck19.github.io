@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>¡AHORA SÍ FUNCIONA!</title>
+  <title>¡CSS AL RESCATE!</title>
   
   <style>
     body { 
@@ -12,6 +12,14 @@
       overflow: hidden; 
       background: #000; 
     }
+    
+    /* ----- ¡AQUÍ ESTÁ LA NUEVA CORRECCIÓN! ----- */
+    /* Oculta el elemento <video> original a la fuerza */
+    video {
+      display: none;
+    }
+    /* ----------------------------------------- */
+
   </style>
 </head>
 
@@ -36,17 +44,14 @@
         audio: false
       });
 
-      // ----- ¡AQUÍ ESTÁ LA CORRECCIÓN! -----
-      // Esperamos a que la cámara esté lista (metadata cargada)
-      // y ENTONCES la ocultamos.
+      // Ya no necesitamos la corrección de JavaScript
+      // porque el CSS se encarga de ocultarlo.
       videoEl.elt.onloadedmetadata = () => {
         console.log("🎥 Cámara lista (metadata cargada)");
-        videoEl.elt.style.display = 'none'; // <--- LA MOVIMOS AQUÍ
       }
-      // ------------------------------------
 
       videoEl.size(w, h);
-      // <--- LA BORRAMOS DE AQUÍ
+      // No necesitamos .hide() ni .style.display, el CSS lo hace.
 
       const options = {
         withLandmarks: true,
@@ -77,7 +82,7 @@
     }
 
     function draw() {
-      background(0);
+      background(0); // <-- Esto pinta el canvas de negro
 
       if (videoEl.width === 0) {
         fill(255);
@@ -91,14 +96,14 @@
         return;
       }
 
-      // Dibujar video en canvas como espejo
+      // Esto dibuja el video EN el canvas negro
       push();
       translate(width, 0);
       scale(-1, 1);
       image(videoEl, 0, 0, width, height);
       pop();
 
-      // Dibujar puntos faciales
+      // Esto dibuja los puntos o el texto
       if (detections.length > 0) {
         const puntos = detections[0].landmarks.positions;
         noStroke();
