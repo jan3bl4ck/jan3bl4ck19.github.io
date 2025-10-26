@@ -3,26 +3,129 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
   <title>¡CÁMARA MUTEADA!</title>
-
+  
   <style>
     body { 
       margin: 0; 
       overflow: hidden; 
       background: #000; 
-      color: white;
-      font-family: sans-serif;
     }
-
-    /* 🔧 Corregido: el video ya no está oculto, solo invisible */
     video {
-      position: absolute;
-      top: 0;
-      left: 0;
-      opacity: 0;
       z-index: -1;
+      display: none !important;
     }
-
     canvas {
       z-index: 100;
     }
+  </style>
+</head>
+
+<body>
+  <script src="https://unpkg.com/ml5@0.12.2/dist/ml5.min.js"></script>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+
+  <script>
+    let videoEl;
+    let faceapi;
+    let detections = [];
+    let modeloListo = false;
+
+    function setup() {
+      const w = windowWidth < 700 ? windowWidth : 640;
+      const h = windowHeight < 500 ? windowHeight : 480;
+      createCanvas(w, h); 
+
+      videoEl = createCapture({
+        video: { facingMode: "user", width: w, height: h },
+        audio: false
+      }); 
+
+      // ----- ¡AQUÍ ESTÁ LA NUEVA CORRECCIÓN! -----
+      // Forzamos el silencio (mute) para convencer al navegador
+      videoEl.elt.muted = true; 
+      // ------------------------------------------
+
+      videoEl.elt.onloadedmetadata = () => {
+        console.log("🎥 Cámara lista (metadata cargada)");
+        videoEl.play(); 
+      }
+
+      videoEl.size(w, h);
+      // No necesitamos .hide(), el CSS se encarga.
+
+      const options = {
+        withLandmarks: true,
+        withExpressions: false,
+        withDescriptors: false
+      };
+
+      faceapi = ml5.faceApi(videoEl.elt, options, modelReady);
+
+      textAlign(CENTER);
+      textSize(20);
+      fill(255);
+    }
+
+    function modelReady() {
+      console.log("✅ Modelo cargado correctamente");
+      modeloListo = true;
+      faceapi.detect(videoEl.elt, gotResults);
+    }
+
+    function gotResults(err, result) {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      detections = result;
+      faceapi.detect(videoEl.elt, gotResults);
+    }
+
+    function draw() {
+      // Usamos esta comprobación, es la más segura
+      if (videoEl.elt.videoWidth === 0) {
+        background(0); 
+        fill(255);
+        text("🎥 Iniciando cámara...", width / 2, height / 2);
+        return;
+      }
+
+      if (!modeloListo) {
+        background(0); 
+        fill(255);
+        text("🧠 Cargando modelo de rostro...", width / 2, height / 2);
+        return;
+      }
+      
+      background(0); // 1. Fondo negro
+
+      // 2. Dibuja el video
+      push();
+      translate(width, 0);
+      scale(-1, 1);
+      image(videoEl, 0, 0, width, height);
+      pop();
+
+      // 3. Dibuja los puntos o el texto
+      if (detections.length > 0) {
+        const puntos = detections[0].landmarks.positions;
+        noStroke();
+        fill(255, 100, 150, 160);
+        for (let p of puntos) {
+          ellipse(width - p.x, p.y, 8, 8);
+        }
+      } else {
+        fill(255);
+        text("Mira hacia la cámara 👀", width / 2, height / 2);
+      }
+    }
+
+    function windowResized() {
+      resizeCanvas(windowWidth < 700 ? windowWidth : 640, windowHeight < 500 ? windowHeight : 480);
+    }
+  </script>
+</body>
+</html>
