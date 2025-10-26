@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>¡ARREGLADO CON CAPAS (Z-INDEX)!</title>
+  <title>¡DESPIERTA CÁMARA!</title>
   
   <style>
     body { 
@@ -13,19 +13,16 @@
       background: #000; 
     }
     
-    /* ----- ¡AQUÍ ESTÁ LA NUEVA CORRECCIÓN! ----- */
-    /* 1. Oculta el <video> original a la fuerza */
+    /* Manda el <video> original al fondo */
     video {
+      z-index: -1;
       display: none !important;
-      z-index: -1; /* Mándalo al fondo */
     }
     
-    /* 2. Trae el <canvas> de p5.js al frente */
+    /* Trae el <canvas> de p5.js al frente */
     canvas {
-      z-index: 100; /* Ponlo encima de todo */
+      z-index: 100;
     }
-    /* ----------------------------------------- */
-
   </style>
 </head>
 
@@ -52,10 +49,14 @@
 
       videoEl.elt.onloadedmetadata = () => {
         console.log("🎥 Cámara lista (metadata cargada)");
+        // ----- ¡AQUÍ ESTÁ LA NUEVA CORRECCIÓN! -----
+        // "Despertamos" la cámara para que envíe video
+        videoEl.play(); 
+        // ------------------------------------------
       }
 
       videoEl.size(w, h);
-      // No necesitamos .hide() ni .style, el CSS se encarga.
+      // No necesitamos .hide(), el CSS se encarga.
 
       const options = {
         withLandmarks: true,
@@ -86,28 +87,32 @@
     }
 
     function draw() {
-      background(0); // <-- Pinta el canvas de negro
-
-      if (videoEl.width === 0) {
+      // Esta comprobación es más robusta
+      if (videoEl.elt.videoWidth === 0) {
+        background(0); // Mantenemos el fondo negro
         fill(255);
         text("🎥 Iniciando cámara...", width / 2, height / 2);
         return;
       }
 
       if (!modeloListo) {
+        background(0); // Mantenemos el fondo negro
         fill(255);
         text("🧠 Cargando modelo de rostro...", width / 2, height / 2);
         return;
       }
+      
+      // ¡Aquí es donde la magia pasa!
+      background(0); // 1. Fondo negro
 
-      // Dibuja el video EN el canvas
+      // 2. Dibuja el video (que ya no será gris)
       push();
       translate(width, 0);
       scale(-1, 1);
       image(videoEl, 0, 0, width, height);
       pop();
 
-      // Dibuja los puntos o el texto
+      // 3. Dibuja los puntos o el texto
       if (detections.length > 0) {
         const puntos = detections[0].landmarks.positions;
         noStroke();
