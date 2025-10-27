@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>¡Retrato Completo!</title>
+  <title>¡Figuras Grandes y Estables!</title>
   
   <style>
     body { 
@@ -30,7 +30,7 @@
     // --- Variables de Detección Facial ---
     let videoEl;
     let faceapi;
-    let detections = [];
+    let detections = []; // Esta variable ahora será más estable
     let modeloListo = false;
     
     // --- Variables de Huella Digital (IP) ---
@@ -40,9 +40,7 @@
 
     function setup() {
       createCanvas(800, 800);
-      
-      // ----- ¡CAMBIO DE VELOCIDAD! -----
-      frameRate(3); // <-- MÁS LENTO (antes era 10)
+      frameRate(3); // Mantenemos el framerate bajo
       
       // --- 1. Configurar Cámara ---
       videoEl = createCapture({
@@ -92,12 +90,20 @@
       faceapi.detect(videoEl.elt, gotResults);
     }
 
+    // ----- ¡CAMBIO DE SENSIBILIDAD! -----
     function gotResults(err, result) {
       if (err) {
         console.error(err);
         return;
       }
-      detections = result;
+      
+      // Solo actualizamos 'detections' si SÍ encontramos una cara.
+      // Si 'result' está vacío (un fotograma perdido), 
+      // 'detections' MANTIENE los datos anteriores, evitando el parpadeo.
+      if (result.length > 0) {
+        detections = result;
+      }
+      
       faceapi.detect(videoEl.elt, gotResults);
     }
     
@@ -124,7 +130,7 @@
         return;
       }
 
-      // 1. Dibuja el video de la cámara (en modo espejo)
+      // 1. Dibuja el video de la cámara
       push();
       translate(width, 0);
       scale(-1, 1);
@@ -168,38 +174,36 @@
     }
 
     // ---------------------------------------------------------------
-    // --- ESTILOS ADAPTADOS (¡CON MÁS FIGURAS!) ---
+    // --- ESTILOS ADAPTADOS (¡CON FIGURAS MÁS GRANDES!) ---
     // ---------------------------------------------------------------
 
     function estilo0(points) {
       let colores = ['#64B5F680','#90CAF980','#4FC3F780','#29B6F680','#0288D180'];
-      
-      // ----- ¡CAMBIO DE COBERTURA! -----
-      for (let i=0; i < 15; i++){ // <-- MÁS FIGURAS (antes era 2)
+      for (let i=0; i < 15; i++){ 
         let p = random(points); 
         fill(random(colores));
         noStroke();
-        ellipse(width - p.x, p.y, random(20, 100)); // <-- Un poco más pequeño
+        ellipse(width - p.x, p.y, random(50, 180)); // <-- MÁS GRANDE
       }
     }
 
     function estilo1(points) {
       let colores = ['#FF6EC780','#E040FB80','#BA68C880','#8E24AA80','#D500F980'];
-      for (let i=0; i < 15; i++){ // <-- MÁS FIGURAS (antes era 2)
+      for (let i=0; i < 15; i++){
         let p = random(points);
         fill(random(colores));
         noStroke();
         push();
         translate(width - p.x, p.y); 
         rotate(random(TWO_PI));
-        rect(0,0,random(20,80),random(10,40),10);
+        rect(0,0,random(50, 130),random(30, 70),10); // <-- MÁS GRANDE
         pop();
       }
     }
 
     function estilo2(points) {
       let colores = ['#FFEB3B70','#FFF59D70','#FFD74070','#FBC02D70'];
-      for (let i=0; i < 15; i++){ // <-- MÁS FIGURAS (antes era 2)
+      for (let i=0; i < 15; i++){
         let p = random(points);
         fill(random(colores));
         noStroke();
@@ -208,7 +212,7 @@
         beginShape();
         for(let j=0;j<5;j++){
           let angle = TWO_PI/5*j + frameCount*0.01;
-          vertex(x+cos(angle)*random(20,40), y+sin(angle)*random(20,40));
+          vertex(x+cos(angle)*random(40, 90), y+sin(angle)*random(40, 90)); // <-- MÁS GRANDE
         }
         endShape(CLOSE);
       }
@@ -216,96 +220,39 @@
 
     function estilo3(points) {
       let colores = ['#FF8A6580','#FF704380','#E64A1980','#D8431580'];
-      for(let i=0; i < 15; i++){ // <-- MÁS FIGURAS (antes era 2)
+      for(let i=0; i < 15; i++){
         let p = random(points);
         fill(random(colores));
         noStroke();
-        ellipse(width - p.x, p.y, random(30,80));
+        ellipse(width - p.x, p.y, random(50, 140)); // <-- MÁS GRANDE
       }
     }
 
     function estilo4(points) {
       let colores = ['#A5D6A780','#81C78480','#66BB6A80','#4CAF5080'];
-      for(let i=0; i < 15; i++){ // <-- MÁS FIGURAS (antes era 2)
+      for(let i=0; i < 15; i++){
         let p = random(points);
         fill(random(colores));
         noStroke();
         push();
         translate(width - p.x, p.y);
         rotate(frameCount*0.02);
-        rect(0,0,random(40,70),random(20,50));
+        rect(0,0,random(60, 120),random(40, 80)); // <-- MÁS GRANDE
         pop();
       }
     }
 
     function estilo5(points) {
       let colores = ['#80DEEA80','#26C6DA80','#00ACC180','#00838F80'];
-      for(let i=0; i < 15; i++){ // <-- MÁS FIGURAS (antes era 2)
+      for(let i=0; i < 15; i++){
         let p = random(points);
         fill(random(colores));
         noStroke();
         let x = width - p.x;
         let y = p.y;
-        triangle(x,y,x+random(30,60),y+random(-30,30),x+random(-40,40),y+random(30,60));
+        triangle(x,y,x+random(50, 110),y+random(-50,50),x+random(-50,50),y+random(50,110)); // <-- MÁS GRANDE
       }
     }
 
     function estilo6(points) {
       let colores = ['#F5F5F580','#BDBDBD80','#9E9E9E80','#75757580'];
-      for(let i=0; i < 20; i++){ // <-- MÁS FIGURAS (antes era 3)
-        let p = random(points);
-        fill(random(colores));
-        noStroke();
-        rect(width - p.x, p.y, random(10,50), random(10,50));
-      }
-    }
-
-    function estilo7(points) {
-      let colores = ['#FFB6C180','#F48FB180','#F0629280','#EC407A80'];
-      for(let i=0; i < 15; i++){ // <-- MÁS FIGURAS (antes era 2)
-        let p = random(points);
-        fill(random(colores));
-        noStroke();
-        let x = width - p.x;
-        let y = p.y;
-        beginShape();
-        for(let j=0;j<6;j++){
-          let angle=TWO_PI/6*j;
-          vertex(x+cos(angle)*random(20,40), y+sin(angle)*random(20,40));
-        }
-        endShape(CLOSE);
-      }
-    }
-
-    function estilo8(points) {
-      let colores = ['#FFF9C480','#FFF59D80','#FFEE5880','#FFF17680'];
-      let c1=color(random(colores));
-      let c2=color(random(colores));
-      for(let j=0; j < 15; j++){ // <-- MÁS FIGURAS (antes era 2)
-        let p = random(points);
-        fill(lerpColor(c1,c2,j/10));
-        noStroke();
-        ellipse(width - p.x, p.y, random(30,80));
-      }
-    }
-
-    function estilo9(points) {
-      let colores = ['#BBDEFB80','#64B5F680','#2196F380','#1976D280'];
-      for(let i=0; i < 15; i++){ // <-- MÁS FIGURAS (antes era 2)
-        let p = random(points);
-        fill(random(colores));
-        noStroke();
-        push();
-        translate(width - p.x, p.y);
-        rotate(random(TWO_PI));
-        beginShape();
-        for(let j=0;j<random(5,8);j++){
-          vertex(cos(j*TWO_PI/6)*random(20,50), sin(j*TWO_PI/6)*random(20,50));
-        }
-        endShape(CLOSE);
-        pop();
-      }
-    }
-  </script>
-</body>
-</html>
