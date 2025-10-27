@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>¡Retrato Fluido Completo!</title>
+  <title>¡BOTÓN Y CICLOS ARREGLADOS!</title>
   
   <style>
     body { 
@@ -19,12 +19,9 @@
     canvas {
       z-index: 100;
     }
-    /* Estilo para el botón */
+    /* Estilo para el botón (p5.js pondrá la posición) */
     button {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      z-index: 200;
+      z-index: 200; /* Asegura que esté encima del canvas */
       padding: 8px 12px;
       font-size: 14px;
       background-color: #fff;
@@ -49,13 +46,10 @@
     // --- Variables de Huella Digital (IP) ---
     let ip = "0.0.0.0";
     let valores;
-    // let index = 0; // <-- Ya no lo necesitamos
 
     function setup() {
       createCanvas(800, 800);
-      
-      // ----- ¡CAMBIO DE VELOCIDAD! -----
-      frameRate(6); // <-- Más fluido (como tu original)
+      frameRate(6); // Más fluido
       
       // --- 1. Configurar Cámara ---
       videoEl = createCapture({
@@ -79,9 +73,9 @@
         faceapi = ml5.faceApi(videoEl.elt, options, modelReady);
       }
 
-      // ----- ¡AÑADIMOS EL BOTÓN! -----
+      // ----- ¡CORRECCIÓN DEL BOTÓN! -----
       let btn = createButton('Descargar Retrato');
-      // No usamos .position() para que se quede dentro del CSS
+      btn.position(10, 10); // <-- ¡SÍ USAMOS .position()!
       btn.mousePressed(() => saveCanvas('mi_retrato_huella', 'png'));
 
       textAlign(CENTER);
@@ -154,10 +148,9 @@
       if (detections.length > 0) {
         const points = detections[0].landmarks.positions;
         
-        // ----- ¡CAMBIO DE LÓGICA! -----
-        // Dibujamos los 4 estilos de la IP al mismo tiempo
+        // --- LÓGICA DE 4 ESTILOS A LA VEZ (¡Correcta!) ---
         for (let i = 0; i < valores.length; i++) {
-          let num = valores[i] % 10; // Saca el último dígito de CADA número de la IP
+          let num = valores[i] % 10;
           switch(num){
             case 0: estilo0(points); break;
             case 1: estilo1(points); break;
@@ -171,7 +164,6 @@
             case 9: estilo9(points); break;
           }
         }
-        // Ya no necesitamos 'index++'
 
       } else {
         fill(255);
@@ -191,7 +183,7 @@
 
     // ---------------------------------------------------------------
     // --- ESTILOS ADAPTADOS (CON FIGURAS MÁS GRANDES) ---
-    // (Estos no cambian, pero he verificado el typo de estilo9)
+    // (El typo del estilo9 está corregido aquí)
     // ---------------------------------------------------------------
 
     function estilo0(points) {
@@ -311,7 +303,6 @@
     }
 
     function estilo9(points) {
-      // ¡El typo está corregido aquí!
       let colores = ['#BBDEFB80','#64B5F680','#2196F380','#1976D280'];
       for(let i=0; i < 15; i++){
         let p = random(points);
