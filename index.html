@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>¡EL BUENO (TYPO ARREGLADO)!</title>
+  <title>¡Retrato Fluido Completo!</title>
   
   <style>
     body { 
@@ -19,6 +19,19 @@
     canvas {
       z-index: 100;
     }
+    /* Estilo para el botón */
+    button {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 200;
+      padding: 8px 12px;
+      font-size: 14px;
+      background-color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
   </style>
 </head>
 
@@ -30,17 +43,19 @@
     // --- Variables de Detección Facial ---
     let videoEl;
     let faceapi;
-    let detections = []; // <-- Versión simple
+    let detections = [];
     let modeloListo = false;
     
     // --- Variables de Huella Digital (IP) ---
     let ip = "0.0.0.0";
     let valores;
-    let index = 0;
+    // let index = 0; // <-- Ya no lo necesitamos
 
     function setup() {
       createCanvas(800, 800);
-      frameRate(3); // Mantenemos el framerate bajo
+      
+      // ----- ¡CAMBIO DE VELOCIDAD! -----
+      frameRate(6); // <-- Más fluido (como tu original)
       
       // --- 1. Configurar Cámara ---
       videoEl = createCapture({
@@ -63,6 +78,11 @@
         };
         faceapi = ml5.faceApi(videoEl.elt, options, modelReady);
       }
+
+      // ----- ¡AÑADIMOS EL BOTÓN! -----
+      let btn = createButton('Descargar Retrato');
+      // No usamos .position() para que se quede dentro del CSS
+      btn.mousePressed(() => saveCanvas('mi_retrato_huella', 'png'));
 
       textAlign(CENTER);
       textSize(20);
@@ -90,13 +110,12 @@
       faceapi.detect(videoEl.elt, gotResults);
     }
 
-    // --- ¡VOLVEMOS A LA VERSIÓN SIMPLE Y FUNCIONAL! ---
+    // --- Detección simple y funcional ---
     function gotResults(err, result) {
       if (err) {
         console.error(err);
         return;
       }
-      // Esta es la versión que funcionaba
       detections = result; 
       faceapi.detect(videoEl.elt, gotResults);
     }
@@ -134,22 +153,25 @@
       // 2. Dibuja las figuras ENCIMA
       if (detections.length > 0) {
         const points = detections[0].landmarks.positions;
-        let num = valores[index % valores.length] % 10;
         
-        switch(num){
-          case 0: estilo0(points); break;
-          case 1: estilo1(points); break;
-          case 2: estilo2(points); break;
-          case 3: estilo3(points); break;
-          case 4: estilo4(points); break;
-          case 5: estilo5(points); break;
-          case 6: estilo6(points); break;
-          case 7: estilo7(points); break;
-          case 8: estilo8(points); break;
-          case 9: estilo9(points); break;
+        // ----- ¡CAMBIO DE LÓGICA! -----
+        // Dibujamos los 4 estilos de la IP al mismo tiempo
+        for (let i = 0; i < valores.length; i++) {
+          let num = valores[i] % 10; // Saca el último dígito de CADA número de la IP
+          switch(num){
+            case 0: estilo0(points); break;
+            case 1: estilo1(points); break;
+            case 2: estilo2(points); break;
+            case 3: estilo3(points); break;
+            case 4: estilo4(points); break;
+            case 5: estilo5(points); break;
+            case 6: estilo6(points); break;
+            case 7: estilo7(points); break;
+            case 8: estilo8(points); break;
+            case 9: estilo9(points); break;
+          }
         }
-        
-        index++; 
+        // Ya no necesitamos 'index++'
 
       } else {
         fill(255);
@@ -169,6 +191,7 @@
 
     // ---------------------------------------------------------------
     // --- ESTILOS ADAPTADOS (CON FIGURAS MÁS GRANDES) ---
+    // (Estos no cambian, pero he verificado el typo de estilo9)
     // ---------------------------------------------------------------
 
     function estilo0(points) {
@@ -288,8 +311,7 @@
     }
 
     function estilo9(points) {
-      // ----- ¡AQUÍ ESTÁ EL TYPO CORREGIDO (DE VERDAD)! -----
-      // Era '#219F380', ahora es '#2196F380' (con un 6)
+      // ¡El typo está corregido aquí!
       let colores = ['#BBDEFB80','#64B5F680','#2196F380','#1976D280'];
       for(let i=0; i < 15; i++){
         let p = random(points);
