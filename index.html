@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>¡TYPO ARREGLADO (DE VERDAD)!</title>
+  <title>¡EL BUENO (TYPO ARREGLADO)!</title>
   
   <style>
     body { 
@@ -30,7 +30,7 @@
     // --- Variables de Detección Facial ---
     let videoEl;
     let faceapi;
-    let detections = [];
+    let detections = []; // <-- Versión simple
     let modeloListo = false;
     
     // --- Variables de Huella Digital (IP) ---
@@ -90,17 +90,14 @@
       faceapi.detect(videoEl.elt, gotResults);
     }
 
-    // --- Detección estable ---
+    // --- ¡VOLVEMOS A LA VERSIÓN SIMPLE Y FUNCIONAL! ---
     function gotResults(err, result) {
       if (err) {
         console.error(err);
         return;
       }
-      
-      if (result.length > 0) {
-        detections = result;
-      }
-      
+      // Esta es la versión que funcionaba
+      detections = result; 
       faceapi.detect(videoEl.elt, gotResults);
     }
     
@@ -291,8 +288,8 @@
     }
 
     function estilo9(points) {
-      // ----- ¡AQUÍ ESTÁ EL TYPO CORREGIDO! -----
-      // Era '219F380', ahora es '2196F380' (con un 6)
+      // ----- ¡AQUÍ ESTÁ EL TYPO CORREGIDO (DE VERDAD)! -----
+      // Era '#219F380', ahora es '#2196F380' (con un 6)
       let colores = ['#BBDEFB80','#64B5F680','#2196F380','#1976D280'];
       for(let i=0; i < 15; i++){
         let p = random(points);
