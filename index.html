@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>¡VIDEO + HUELLA!</title>
+  <title>¡Retrato Completo!</title>
   
   <style>
     body { 
@@ -40,7 +40,9 @@
 
     function setup() {
       createCanvas(800, 800);
-      frameRate(10);
+      
+      // ----- ¡CAMBIO DE VELOCIDAD! -----
+      frameRate(3); // <-- MÁS LENTO (antes era 10)
       
       // --- 1. Configurar Cámara ---
       videoEl = createCapture({
@@ -102,8 +104,7 @@
     // --- Función DRAW principal ---
     function draw() {
       
-      // --- Comprobaciones de Carga (en orden) ---
-      // (Usamos background(0) sólido para los mensajes)
+      // --- Comprobaciones de Carga ---
       if (videoEl.elt.videoWidth === 0) {
         background(0);
         fill(255);
@@ -123,21 +124,14 @@
         return;
       }
 
-      // --- ¡LA MAGIA OCURRE AQUÍ! ---
-      
-      // --- ¡CAMBIO 1! ---
-      // Dibuja el video de la cámara (en modo espejo)
-      // como fondo, en lugar del rectángulo oscuro.
+      // 1. Dibuja el video de la cámara (en modo espejo)
       push();
       translate(width, 0);
       scale(-1, 1);
       image(videoEl, 0, 0, width, height);
       pop();
-      // --------------------
-
-      // --- ¡CAMBIO 2! ---
-      // Ahora que el video está dibujado, 
-      // dibujamos las figuras ENCIMA.
+      
+      // 2. Dibuja las figuras ENCIMA
       if (detections.length > 0) {
         const points = detections[0].landmarks.positions;
         let num = valores[index % valores.length] % 10;
@@ -158,12 +152,11 @@
         index++; 
 
       } else {
-        // No hay cara, mostrar mensaje (encima del video)
         fill(255);
         text("Mira hacia la cámara 👀", width / 2, height / 2);
       }
 
-      // 6. Texto poético (encima de todo)
+      // 3. Texto poético
       fill(255, 200);
       textAlign(CENTER);
       textSize(16);
@@ -174,36 +167,39 @@
       resizeCanvas(windowWidth < 700 ? windowWidth : 640, windowHeight < 500 ? windowHeight : 480);
     }
 
-    // --- ESTILOS ADAPTADOS AL ROSTRO (Sin cambios) ---
-    // (estilo0, estilo1, estilo2, etc. van aquí...)
+    // ---------------------------------------------------------------
+    // --- ESTILOS ADAPTADOS (¡CON MÁS FIGURAS!) ---
+    // ---------------------------------------------------------------
 
     function estilo0(points) {
       let colores = ['#64B5F680','#90CAF980','#4FC3F780','#29B6F680','#0288D180'];
-      for (let i=0; i < 2; i++){
+      
+      // ----- ¡CAMBIO DE COBERTURA! -----
+      for (let i=0; i < 15; i++){ // <-- MÁS FIGURAS (antes era 2)
         let p = random(points); 
         fill(random(colores));
         noStroke();
-        ellipse(width - p.x, p.y, random(20, 120));
+        ellipse(width - p.x, p.y, random(20, 100)); // <-- Un poco más pequeño
       }
     }
 
     function estilo1(points) {
       let colores = ['#FF6EC780','#E040FB80','#BA68C880','#8E24AA80','#D500F980'];
-      for (let i=0; i < 2; i++){
+      for (let i=0; i < 15; i++){ // <-- MÁS FIGURAS (antes era 2)
         let p = random(points);
         fill(random(colores));
         noStroke();
         push();
         translate(width - p.x, p.y); 
         rotate(random(TWO_PI));
-        rect(0,0,random(20,100),random(10,50),10);
+        rect(0,0,random(20,80),random(10,40),10);
         pop();
       }
     }
 
     function estilo2(points) {
       let colores = ['#FFEB3B70','#FFF59D70','#FFD74070','#FBC02D70'];
-      for (let i=0; i < 2; i++){
+      for (let i=0; i < 15; i++){ // <-- MÁS FIGURAS (antes era 2)
         let p = random(points);
         fill(random(colores));
         noStroke();
@@ -212,7 +208,7 @@
         beginShape();
         for(let j=0;j<5;j++){
           let angle = TWO_PI/5*j + frameCount*0.01;
-          vertex(x+cos(angle)*random(20,50), y+sin(angle)*random(20,50));
+          vertex(x+cos(angle)*random(20,40), y+sin(angle)*random(20,40));
         }
         endShape(CLOSE);
       }
@@ -220,53 +216,53 @@
 
     function estilo3(points) {
       let colores = ['#FF8A6580','#FF704380','#E64A1980','#D8431580'];
-      for(let i=0; i < 2; i++){
+      for(let i=0; i < 15; i++){ // <-- MÁS FIGURAS (antes era 2)
         let p = random(points);
         fill(random(colores));
         noStroke();
-        ellipse(width - p.x, p.y, random(30,90));
+        ellipse(width - p.x, p.y, random(30,80));
       }
     }
 
     function estilo4(points) {
       let colores = ['#A5D6A780','#81C78480','#66BB6A80','#4CAF5080'];
-      for(let i=0; i < 2; i++){
+      for(let i=0; i < 15; i++){ // <-- MÁS FIGURAS (antes era 2)
         let p = random(points);
         fill(random(colores));
         noStroke();
         push();
         translate(width - p.x, p.y);
         rotate(frameCount*0.02);
-        rect(0,0,random(40,80),random(20,60));
+        rect(0,0,random(40,70),random(20,50));
         pop();
       }
     }
 
     function estilo5(points) {
       let colores = ['#80DEEA80','#26C6DA80','#00ACC180','#00838F80'];
-      for(let i=0; i < 2; i++){
+      for(let i=0; i < 15; i++){ // <-- MÁS FIGURAS (antes era 2)
         let p = random(points);
         fill(random(colores));
         noStroke();
         let x = width - p.x;
         let y = p.y;
-        triangle(x,y,x+random(30,70),y+random(-30,30),x+random(-40,40),y+random(30,70));
+        triangle(x,y,x+random(30,60),y+random(-30,30),x+random(-40,40),y+random(30,60));
       }
     }
 
     function estilo6(points) {
       let colores = ['#F5F5F580','#BDBDBD80','#9E9E9E80','#75757580'];
-      for(let i=0; i < 3; i++){ 
+      for(let i=0; i < 20; i++){ // <-- MÁS FIGURAS (antes era 3)
         let p = random(points);
         fill(random(colores));
         noStroke();
-        rect(width - p.x, p.y, random(10,60), random(10,60));
+        rect(width - p.x, p.y, random(10,50), random(10,50));
       }
     }
 
     function estilo7(points) {
       let colores = ['#FFB6C180','#F48FB180','#F0629280','#EC407A80'];
-      for(let i=0; i < 2; i++){
+      for(let i=0; i < 15; i++){ // <-- MÁS FIGURAS (antes era 2)
         let p = random(points);
         fill(random(colores));
         noStroke();
@@ -275,7 +271,7 @@
         beginShape();
         for(let j=0;j<6;j++){
           let angle=TWO_PI/6*j;
-          vertex(x+cos(angle)*random(20,50), y+sin(angle)*random(20,50));
+          vertex(x+cos(angle)*random(20,40), y+sin(angle)*random(20,40));
         }
         endShape(CLOSE);
       }
@@ -285,17 +281,17 @@
       let colores = ['#FFF9C480','#FFF59D80','#FFEE5880','#FFF17680'];
       let c1=color(random(colores));
       let c2=color(random(colores));
-      for(let j=0; j < 2; j++){
+      for(let j=0; j < 15; j++){ // <-- MÁS FIGURAS (antes era 2)
         let p = random(points);
         fill(lerpColor(c1,c2,j/10));
         noStroke();
-        ellipse(width - p.x, p.y, random(30,100));
+        ellipse(width - p.x, p.y, random(30,80));
       }
     }
 
     function estilo9(points) {
       let colores = ['#BBDEFB80','#64B5F680','#2196F380','#1976D280'];
-      for(let i=0; i < 2; i++){
+      for(let i=0; i < 15; i++){ // <-- MÁS FIGURAS (antes era 2)
         let p = random(points);
         fill(random(colores));
         noStroke();
@@ -304,7 +300,7 @@
         rotate(random(TWO_PI));
         beginShape();
         for(let j=0;j<random(5,8);j++){
-          vertex(cos(j*TWO_PI/6)*random(20,60), sin(j*TWO_PI/6)*random(20,60));
+          vertex(cos(j*TWO_PI/6)*random(20,50), sin(j*TWO_PI/6)*random(20,50));
         }
         endShape(CLOSE);
         pop();
