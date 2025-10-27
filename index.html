@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>¡TYPO CORREGIDO!</title>
+  <title>¡TYPO ARREGLADO (DE VERDAD)!</title>
   
   <style>
     body { 
@@ -90,20 +90,17 @@
       faceapi.detect(videoEl.elt, gotResults);
     }
 
-    // --- Detección estable (¡Ahora sí!) ---
+    // --- Detección estable ---
     function gotResults(err, result) {
       if (err) {
         console.error(err);
         return;
       }
       
-      // Solo actualizamos 'detections' si SÍ encontramos una cara.
-      // Si 'result' está vacío, 'detections' mantiene los datos anteriores.
       if (result.length > 0) {
         detections = result;
       }
       
-      // Llamamos a 'detect' de nuevo en cualquier caso para mantener el bucle
       faceapi.detect(videoEl.elt, gotResults);
     }
     
@@ -230,4 +227,88 @@
 
     function estilo4(points) {
       let colores = ['#A5D6A780','#81C78480','#66BB6A80','#4CAF5080'];
-      for(let i=0; i
+      for(let i=0; i < 15; i++){
+        let p = random(points);
+        fill(random(colores));
+        noStroke();
+        push();
+        translate(width - p.x, p.y);
+        rotate(frameCount*0.02);
+        rect(0,0,random(60, 120),random(40, 80));
+        pop();
+      }
+    }
+
+    function estilo5(points) {
+      let colores = ['#80DEEA80','#26C6DA80','#00ACC180','#00838F80'];
+      for(let i=0; i < 15; i++){
+        let p = random(points);
+        fill(random(colores));
+        noStroke();
+        let x = width - p.x;
+        let y = p.y;
+        triangle(x,y,x+random(50, 110),y+random(-50,50),x+random(-50,50),y+random(50,110));
+      }
+    }
+
+    function estilo6(points) {
+      let colores = ['#F5F5F580','#BDBDBD80','#9E9E9E80','#75757580'];
+      for(let i=0; i < 20; i++){ 
+        let p = random(points);
+        fill(random(colores));
+        noStroke();
+        rect(width - p.x, p.y, random(30, 90), random(30, 90));
+      }
+    }
+
+    function estilo7(points) {
+      let colores = ['#FFB6C180','#F48FB180','#F0629280','#EC407A80'];
+      for(let i=0; i < 15; i++){
+        let p = random(points);
+        fill(random(colores));
+        noStroke();
+        let x = width - p.x;
+        let y = p.y;
+        beginShape();
+        for(let j=0;j<6;j++){
+          let angle=TWO_PI/6*j;
+          vertex(x+cos(angle)*random(40, 90), y+sin(angle)*random(40, 90));
+        }
+        endShape(CLOSE);
+      }
+    }
+
+    function estilo8(points) {
+      let colores = ['#FFF9C480','#FFF59D80','#FFEE5880','#FFF17680'];
+      let c1=color(random(colores));
+      let c2=color(random(colores));
+      for(let j=0; j < 15; j++){
+        let p = random(points);
+        fill(lerpColor(c1,c2,j/10));
+        noStroke();
+        ellipse(width - p.x, p.y, random(50, 130));
+      }
+    }
+
+    function estilo9(points) {
+      // ----- ¡AQUÍ ESTÁ EL TYPO CORREGIDO! -----
+      // Era '219F380', ahora es '2196F380' (con un 6)
+      let colores = ['#BBDEFB80','#64B5F680','#2196F380','#1976D280'];
+      for(let i=0; i < 15; i++){
+        let p = random(points);
+        fill(random(colores));
+        noStroke();
+        push();
+        translate(width - p.x, p.y);
+        rotate(random(TWO_PI));
+        beginShape();
+        for(let j=0;j<random(5,8);j++){
+          vertex(cos(j*TWO_PI/6)*random(40, 100), sin(j*TWO_PI/6)*random(40, 100));
+        }
+        endShape(CLOSE);
+        pop();
+      }
+    }
+  </script>
+</body>
+</html>
